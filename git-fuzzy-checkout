@@ -100,7 +100,7 @@ ${COMMAND} \
 		--nth=2 \
 		--no-sort \
 		--preview-window="down:70%:hidden" \
-		--preview="git log -100 --color=always {2}" \
+		--preview="git log -500 --color=always --oneline {2}" \
 		--query "$*" \
 		--reverse \
 	;
