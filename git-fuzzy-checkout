@@ -47,11 +47,11 @@ COMMAND="${COMMAND_HEADS}"
 
 while getopts "ahrt" FLAGS; do
 	case $FLAGS in
-		a) COMMAND="${COMMAND_ALL}" ;;
-		h) echo "$HELP_TEXT" && exit 0 ;;
-		r) COMMAND="${COMMAND_REMOTES}" ;;
-		t) COMMAND="${COMMAND_TAGS}" ;;
-		*) exit 1 ;;
+	a) COMMAND="${COMMAND_ALL}" ;;
+	h) echo "$HELP_TEXT" && exit 0 ;;
+	r) COMMAND="${COMMAND_REMOTES}" ;;
+	t) COMMAND="${COMMAND_TAGS}" ;;
+	*) exit 1 ;;
 	esac
 done
 
@@ -77,31 +77,30 @@ RELOAD_SUFFIX="--color=always --format='${GIT_BRANCH_DISPLAY_FORMAT}' --sort=-co
 ${COMMAND} \
 	--color=always \
 	--format="${GIT_BRANCH_DISPLAY_FORMAT}" \
-	--sort=-committerdate \
-	|
-fzf \
-	--ansi \
-	\
-	--bind="alt-space:toggle-preview" \
-	--bind="enter:execute(git checkout {2})+accept" \
-	--bind="alt-bspace:execute-silent(git branch -D {+2})+reload:${COMMAND} ${RELOAD_SUFFIX}" \
-	--bind="alt-y:execute(printf {+2} | pbcopy)" \
-	--bind="alt-l:execute(jack {+2})" \
-	\
-	--bind="alt-a:reload:${COMMAND_ALL} ${RELOAD_SUFFIX}" \
-	--bind="alt-h:reload:${COMMAND_HEADS} ${RELOAD_SUFFIX}" \
-	--bind="alt-r:reload:${COMMAND_REMOTES} ${RELOAD_SUFFIX}" \
-	--bind="alt-t:reload:${COMMAND_TAGS} ${RELOAD_SUFFIX}" \
-	\
-	--delimiter="${DELIMITER}" \
-	--exact \
-	--header="${FZF_HEADER}" \
-	--info="inline" \
-	--multi \
-	--nth=2 \
-	--no-sort \
-	--preview-window="down:70%:hidden" \
-	--preview="git log -100 --color=always {2}" \
-	--query "$*" \
-	--reverse \
+	--sort=-committerdate |
+	fzf \
+		--ansi \
+		\
+		--bind="alt-space:toggle-preview" \
+		--bind="enter:execute(git checkout {2})+accept" \
+		--bind="alt-bspace:execute-silent(git branch -D {+2})+reload:${COMMAND} ${RELOAD_SUFFIX}" \
+		--bind="alt-y:execute(printf {+2} | pbcopy)" \
+		--bind="alt-l:execute(jack {+2})" \
+		\
+		--bind="alt-a:reload:${COMMAND_ALL} ${RELOAD_SUFFIX}" \
+		--bind="alt-h:reload:${COMMAND_HEADS} ${RELOAD_SUFFIX}" \
+		--bind="alt-r:reload:${COMMAND_REMOTES} ${RELOAD_SUFFIX}" \
+		--bind="alt-t:reload:${COMMAND_TAGS} ${RELOAD_SUFFIX}" \
+		\
+		--delimiter="${DELIMITER}" \
+		--exact \
+		--header="${FZF_HEADER}" \
+		--info="inline" \
+		--multi \
+		--nth=2 \
+		--no-sort \
+		--preview-window="down:70%:hidden" \
+		--preview="git log -100 --color=always {2}" \
+		--query "$*" \
+		--reverse \
 	;
