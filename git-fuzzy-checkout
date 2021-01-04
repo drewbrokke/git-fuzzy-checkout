@@ -63,8 +63,9 @@ DELIMITER=" :: "
 
 FZF_HEADER="""
 enter:            check out branch
-alt-space:        toggle preview window (shows 'git log' of the selected branch)
+alt-space:        toggle preview window (shows limited 'git log' of the selected branch)
 alt-bspace:       delete branch
+alt-l:            invoke 'git log' on selected branch
 alt-y:            copy branch name to clipboard
 alt-[a h r t]:    show [ALL HEADS REMOTES TAGS]
 
@@ -85,7 +86,7 @@ ${COMMAND} \
 		--bind="enter:execute(git checkout {2})+accept" \
 		--bind="alt-bspace:execute-silent(git branch -D {+2})+reload:${COMMAND} ${RELOAD_SUFFIX}" \
 		--bind="alt-y:execute(printf {+2} | pbcopy)" \
-		--bind="alt-l:execute(jack {+2})" \
+		--bind="alt-l:execute(git log {+2})" \
 		\
 		--bind="alt-a:reload:${COMMAND_ALL} ${RELOAD_SUFFIX}" \
 		--bind="alt-h:reload:${COMMAND_HEADS} ${RELOAD_SUFFIX}" \
