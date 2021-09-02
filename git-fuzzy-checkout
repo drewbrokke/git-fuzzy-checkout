@@ -76,7 +76,12 @@ CLIPBOARD_COMMAND="xsel --input"
 
 [ "${OSTYPE//[0-9.]/}" = "darwin" ] && CLIPBOARD_COMMAND="pbcopy"
 
-GIT_BRANCH_DISPLAY_FORMAT="%(committerdate:short)${DELIMITER}%(color:yellow)%(refname:short)%(color:reset)"
+GIT_BRANCH_DISPLAY_FORMAT=""
+
+GIT_BRANCH_DISPLAY_FORMAT+="%(committerdate:short)"
+GIT_BRANCH_DISPLAY_FORMAT+="${DELIMITER}%(color:yellow)%(refname:short)%(color:reset)"
+GIT_BRANCH_DISPLAY_FORMAT+="%(if)%(upstream)%(then)${DELIMITER}%(upstream:short)%(end)"
+
 RELOAD_SUFFIX="--color=always --format='${GIT_BRANCH_DISPLAY_FORMAT}' --sort=-committerdate"
 
 ### Go
@@ -104,7 +109,7 @@ ${COMMAND} \
 		--header="${FZF_HEADER}" \
 		--info="inline" \
 		--multi \
-		--nth=2 \
+		--nth="2,3" \
 		--no-sort \
 		--preview-window="down:70%:hidden" \
 		--preview="git log -500 --color=always --oneline {2}" \
