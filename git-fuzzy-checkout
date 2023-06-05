@@ -43,14 +43,20 @@ COMMAND_HEADS="git for-each-ref refs/heads"
 COMMAND_REMOTES="git for-each-ref refs/remotes"
 COMMAND_TAGS="git for-each-ref refs/tags"
 
+PROMPT_ALL="Filter all refs > "
+PROMPT_HEADS="Filter local branches > "
+PROMPT_REMOTES="Filter remote branches > "
+PROMPT_TAGS="Filter tags > "
+
 COMMAND="${COMMAND_HEADS}"
+PROMPT="${PROMPT_HEADS}"
 
 while getopts "ahrt" FLAGS; do
 	case $FLAGS in
-	a) COMMAND="${COMMAND_ALL}" ;;
+	a) COMMAND="${COMMAND_ALL}" ; PROMPT="${PROMPT_ALL}" ;;
 	h) echo "$HELP_TEXT" && exit 0 ;;
-	r) COMMAND="${COMMAND_REMOTES}" ;;
-	t) COMMAND="${COMMAND_TAGS}" ;;
+	r) COMMAND="${COMMAND_REMOTES}" ; PROMPT="${PROMPT_REMOTES}" ;;
+	t) COMMAND="${COMMAND_TAGS}" ; PROMPT="${PROMPT_TAGS}" ;;
 	*) exit 1 ;;
 	esac
 done
@@ -107,12 +113,14 @@ ${COMMAND} \
 		--delimiter="${DELIMITER}" \
 		--exact \
 		--header="${FZF_HEADER}" \
+		--header-first \
 		--info="inline" \
 		--multi \
 		--nth="2,3" \
 		--no-sort \
 		--preview-window="down:70%:hidden" \
 		--preview="git log -500 --color=always --oneline {2}" \
+		--prompt="${PROMPT}" \
 		--query "$*" \
 		--reverse \
 	;
