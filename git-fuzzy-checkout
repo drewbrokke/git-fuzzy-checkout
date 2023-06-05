@@ -105,10 +105,10 @@ ${COMMAND} \
 		--bind="alt-y:execute(printf {+2} | ${CLIPBOARD_COMMAND})" \
 		--bind="alt-l:execute(git log {+2})" \
 		\
-		--bind="alt-a:reload:${COMMAND_ALL} ${RELOAD_SUFFIX}" \
-		--bind="alt-h:reload:${COMMAND_HEADS} ${RELOAD_SUFFIX}" \
-		--bind="alt-r:reload:${COMMAND_REMOTES} ${RELOAD_SUFFIX}" \
-		--bind="alt-t:reload:${COMMAND_TAGS} ${RELOAD_SUFFIX}" \
+		--bind="alt-a:become($0 -a {q})" \
+		--bind="alt-h:become($0 {q})" \
+		--bind="alt-r:become($0 -r {q})" \
+		--bind="alt-t:become($0 -t {q})" \
 		\
 		--delimiter="${DELIMITER}" \
 		--exact \
