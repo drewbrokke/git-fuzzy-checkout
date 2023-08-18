@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# Requires 'fzf'
-# check_dependency fzf git || exit 1
 if ! command -v fzf &> /dev/null
 then
     echo ' git-fuzzy-checkout requires "fzf".
