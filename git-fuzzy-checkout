@@ -2,6 +2,13 @@
 
 # Requires 'fzf'
 # check_dependency fzf git || exit 1
+if ! command -v fzf &> /dev/null
+then
+    echo ' git-fuzzy-checkout requires "fzf".
+ Install it following these instructions: https://github.com/junegunn/fzf#installation'
+
+    exit 1
+fi
 
 HELP_TEXT="
 git fuzzy-checkout
