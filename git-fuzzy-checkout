@@ -93,6 +93,8 @@ CLIPBOARD_COMMAND="xsel --input"
 
 GIT_BRANCH_DISPLAY_FORMAT=""
 
+# Shows a star if the ref is checked out
+GIT_BRANCH_DISPLAY_FORMAT+="%(if)%(HEAD)%(then)* %(else)  %(end)"
 GIT_BRANCH_DISPLAY_FORMAT+="%(committerdate:short)"
 GIT_BRANCH_DISPLAY_FORMAT+="${DELIMITER}%(color:yellow)%(refname:short)%(color:reset)"
 GIT_BRANCH_DISPLAY_FORMAT+="%(if)%(upstream)%(then)${DELIMITER}%(upstream:short)%(end)"
