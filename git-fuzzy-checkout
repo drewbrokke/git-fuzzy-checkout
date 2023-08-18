@@ -124,6 +124,8 @@ FZF_ARGS=(
 
 	--bind="load:change-prompt(${LOADED_PROMPT_TEXT})"
 
+	--color="scrollbar:-1:bold"
+
 	--delimiter="${DELIMITER}"
 	--exact
 	--header="${FZF_HEADER}"
