@@ -45,30 +45,35 @@ Examples
 
 ### Determine whether to search local, remotes, or all
 
-COMMAND_ALL="git for-each-ref refs/heads refs/remotes refs/tags"
-COMMAND_HEADS="git for-each-ref refs/heads"
-COMMAND_REMOTES="git for-each-ref refs/remotes"
-COMMAND_TAGS="git for-each-ref refs/tags"
-
-PROMPT_ALL="Filter all refs > "
-PROMPT_HEADS="Filter local branches > "
-PROMPT_REMOTES="Filter remote branches > "
-PROMPT_TAGS="Filter tags > "
-
-COMMAND="${COMMAND_HEADS}"
-PROMPT="${PROMPT_HEADS}"
+GIT_ARGS=(for-each-ref refs/heads)
+PROMPT="Filter local branches > "
 
 while getopts "ahrt" FLAGS; do
 	case $FLAGS in
-	a) COMMAND="${COMMAND_ALL}" ; PROMPT="${PROMPT_ALL}" ;;
-	h) echo "$HELP_TEXT" && exit 0 ;;
-	r) COMMAND="${COMMAND_REMOTES}" ; PROMPT="${PROMPT_REMOTES}" ;;
-	t) COMMAND="${COMMAND_TAGS}" ; PROMPT="${PROMPT_TAGS}" ;;
-	*) exit 1 ;;
+	a)
+		GIT_ARGS=(for-each-ref refs/heads refs/remotes refs/tags)
+		PROMPT="Filter all refs > "
+		;;
+	h)
+		echo "$HELP_TEXT" && exit 0
+		;;
+	r)
+		GIT_ARGS=(for-each-ref refs/remotes)
+		PROMPT="Filter remote branches > "
+		;;
+	t)
+		GIT_ARGS=(for-each-ref refs/tags)
+		PROMPT="Filter tags > "
+		;;
+	*)
+		exit 1
+		;;
 	esac
 done
 
 shift $((OPTIND - 1))
+
+GIT_ARGS+=(--color=always --sort=-committerdate)
 
 ### Set up display
 
@@ -95,14 +100,18 @@ GIT_BRANCH_DISPLAY_FORMAT+="%(committerdate:short)"
 GIT_BRANCH_DISPLAY_FORMAT+="${DELIMITER}%(color:yellow)%(refname:short)%(color:reset)"
 GIT_BRANCH_DISPLAY_FORMAT+="%(if)%(upstream)%(then)${DELIMITER}%(upstream:short)%(end)"
 
-RELOAD_SUFFIX="--color=always --format='${GIT_BRANCH_DISPLAY_FORMAT}' --sort=-committerdate"
+# Expand the args to a string now so it will be usable by fzf in the reload command
+GIT_ARGS_STRING="${GIT_ARGS[*]} --format='${GIT_BRANCH_DISPLAY_FORMAT}'"
+
+# This will be used in the initial invocation
+GIT_ARGS+=(--format="${GIT_BRANCH_DISPLAY_FORMAT}")
 
 FZF_ARGS=(
 	--ansi
 
 	--bind="alt-space:toggle-preview"
 	--bind="enter:execute(git checkout {2})+accept"
-	--bind="alt-bspace:execute-silent(git branch -D {+2})+reload(${COMMAND} ${RELOAD_SUFFIX})"
+	--bind="alt-bspace:execute-silent(git branch -D {+2})+reload(git ${GIT_ARGS_STRING})"
 	--bind="alt-y:execute(printf {+2} | ${CLIPBOARD_COMMAND})"
 	--bind="alt-l:execute(git log {+2})"
 
@@ -130,8 +139,4 @@ FZF_ARGS=(
 
 ### Go
 
-${COMMAND} \
-	--color=always \
-	--format="${GIT_BRANCH_DISPLAY_FORMAT}" \
-	--sort=-committerdate |
-fzf "${FZF_ARGS[@]}"
+git "${GIT_ARGS[@]}" | fzf "${FZF_ARGS[@]}"
