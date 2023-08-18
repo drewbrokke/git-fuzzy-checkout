@@ -1,11 +1,10 @@
 #!/bin/bash
 
-if ! command -v fzf &> /dev/null
-then
-    echo ' git-fuzzy-checkout requires "fzf".
+if ! command -v fzf &>/dev/null; then
+	echo ' git-fuzzy-checkout requires "fzf".
  Install it following these instructions: https://github.com/junegunn/fzf#installation'
 
-    exit 1
+	exit 1
 fi
 
 HELP_TEXT="
@@ -48,24 +47,24 @@ LABEL="local branches"
 
 while getopts "ahrt" FLAGS; do
 	case $FLAGS in
-	a)
-		GIT_ARGS=(for-each-ref refs/heads refs/remotes refs/tags)
-		LABEL="all refs"
-		;;
-	h)
-		echo "$HELP_TEXT" && exit 0
-		;;
-	r)
-		GIT_ARGS=(for-each-ref refs/remotes)
-		LABEL="remote branches"
-		;;
-	t)
-		GIT_ARGS=(for-each-ref refs/tags)
-		LABEL="tags"
-		;;
-	*)
-		exit 1
-		;;
+		a)
+			GIT_ARGS=(for-each-ref refs/heads refs/remotes refs/tags)
+			LABEL="all refs"
+			;;
+		h)
+			echo "$HELP_TEXT" && exit 0
+			;;
+		r)
+			GIT_ARGS=(for-each-ref refs/remotes)
+			LABEL="remote branches"
+			;;
+		t)
+			GIT_ARGS=(for-each-ref refs/tags)
+			LABEL="tags"
+			;;
+		*)
+			exit 1
+			;;
 	esac
 done
 
