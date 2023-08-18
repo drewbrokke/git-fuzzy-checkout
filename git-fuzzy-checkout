@@ -108,6 +108,11 @@ GIT_ARGS+=(--format="${GIT_BRANCH_DISPLAY_FORMAT}")
 LOADED_PROMPT_TEXT="Filter ${LABEL} > "
 LOADING_PROMPT_TEXT="Loading ${LABEL} > "
 
+if [ -z "${GIT_FUZZY_CHECKOUT_FZF_COLORS}" ]
+then
+	GIT_FUZZY_CHECKOUT_FZF_COLORS="scrollbar:-1:bold"
+fi
+
 FZF_ARGS=(
 	--ansi
 
@@ -124,7 +129,7 @@ FZF_ARGS=(
 
 	--bind="load:change-prompt(${LOADED_PROMPT_TEXT})"
 
-	--color="scrollbar:-1:bold"
+	--color="${GIT_FUZZY_CHECKOUT_FZF_COLORS}"
 
 	--delimiter="${DELIMITER}"
 	--exact
