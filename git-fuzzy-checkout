@@ -50,12 +50,14 @@ Examples
 
 GIT_ARGS=(for-each-ref refs/heads)
 LABEL="local branches"
+SHOW_CHECKED_OUT_BRANCH=1
 
 while getopts "ahrt" FLAGS; do
 	case $FLAGS in
 		a)
 			GIT_ARGS=(for-each-ref refs/heads refs/remotes refs/tags)
 			LABEL="all refs"
+			SHOW_CHECKED_OUT_BRANCH=1
 			;;
 		h)
 			echo "$HELP_TEXT" && exit 0
@@ -63,10 +65,12 @@ while getopts "ahrt" FLAGS; do
 		r)
 			GIT_ARGS=(for-each-ref refs/remotes)
 			LABEL="remote branches"
+			SHOW_CHECKED_OUT_BRANCH=0
 			;;
 		t)
 			GIT_ARGS=(for-each-ref refs/tags)
 			LABEL="tags"
+			SHOW_CHECKED_OUT_BRANCH=0
 			;;
 		*)
 			exit 1
@@ -140,7 +144,6 @@ FZF_ARGS=(
 	--delimiter="${DELIMITER}"
 	--exact
 	--header="${FZF_HEADER}"
-	--header-first
 	--info="inline"
 	--multi
 	--nth="2,3"
@@ -151,6 +154,10 @@ FZF_ARGS=(
 	--query "$*"
 	--reverse
 )
+
+if [ "${SHOW_CHECKED_OUT_BRANCH}" -ge 1 ] && git symbolic-ref HEAD &>/dev/null; then
+	FZF_ARGS+=(--header-lines=1)
+fi
 
 ### Go
 
