@@ -118,8 +118,7 @@ GIT_ARGS+=(--format="${GIT_BRANCH_DISPLAY_FORMAT}")
 LOADED_PROMPT_TEXT="Filter ${LABEL} > "
 LOADING_PROMPT_TEXT="Loading ${LABEL} > "
 
-if [ -z "${GIT_FUZZY_CHECKOUT_FZF_COLORS}" ]
-then
+if [ -z "${GIT_FUZZY_CHECKOUT_FZF_COLORS}" ]; then
 	GIT_FUZZY_CHECKOUT_FZF_COLORS="scrollbar:-1:bold"
 fi
 
