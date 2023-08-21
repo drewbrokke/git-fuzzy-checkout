@@ -76,7 +76,7 @@ done
 
 shift $((OPTIND - 1))
 
-GIT_ARGS+=(--color=always --sort=-committerdate)
+GIT_ARGS+=(--color=always --sort=-committerdate --sort=-HEAD)
 
 ### Set up display
 
