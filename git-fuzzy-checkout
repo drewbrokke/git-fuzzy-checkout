@@ -48,8 +48,10 @@ Examples
 
 ### Determine whether to search local, remotes, or all
 
+LABEL_LOCAL_BRANCHES="local branches"
+
 GIT_ARGS=(for-each-ref refs/heads)
-LABEL="local branches"
+LABEL="${LABEL_LOCAL_BRANCHES}"
 SHOW_CHECKED_OUT_BRANCH=1
 
 while getopts "ahrt" FLAGS; do
@@ -89,7 +91,7 @@ DELIMITER=" :: "
 FZF_HEADER="""
 enter:            check out branch
 alt-space:        toggle preview window (shows limited 'git log' of the selected branch)
-alt-bspace:       delete branch
+alt-bspace:       delete branch (only available in HEADS view)
 alt-l:            invoke 'git log' on selected branch
 alt-y:            copy branch name to clipboard
 alt-[a h r t]:    show [ALL HEADS REMOTES TAGS]
@@ -127,7 +129,6 @@ FZF_ARGS=(
 
 	--bind="alt-space:toggle-preview"
 	--bind="enter:execute(git checkout {2})+accept"
-	--bind="alt-bspace:execute-silent(git branch -D {+2})+reload(git ${GIT_ARGS_STRING})"
 	--bind="alt-y:execute(printf {+2} | ${CLIPBOARD_COMMAND})"
 	--bind="alt-l:execute(git log {+2})"
 
@@ -153,6 +154,10 @@ FZF_ARGS=(
 	--query "$*"
 	--reverse
 )
+
+if [[ "${LABEL}" = "${LABEL_LOCAL_BRANCHES}" ]]; then
+	FZF_ARGS+=(--bind="alt-bspace:execute-silent(git branch -D {+2})+reload(git ${GIT_ARGS_STRING})")
+fi
 
 if [ "${SHOW_CHECKED_OUT_BRANCH}" -ge 1 ] && git symbolic-ref HEAD &>/dev/null; then
 	FZF_ARGS+=(--header-lines=1)
