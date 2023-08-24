@@ -88,20 +88,62 @@ GIT_ARGS+=(--color=always --sort=-committerdate --sort=-HEAD)
 
 DELIMITER=" :: "
 
-FZF_HEADER="""
-enter:            check out branch
-alt-space:        toggle preview window (shows limited 'git log' of the selected branch)
-alt-bspace:       delete branch (only available in HEADS view)
-alt-l:            invoke 'git log' on selected branch
-alt-y:            copy branch name to clipboard
-alt-[a h r t]:    show [ALL HEADS REMOTES TAGS]
+FZF_HEADER="
+<Enter>      Check out selected branch
+<Control-h>  Show all key bindings
 
-"""
+"
 
-# Set up clipboard command per OS. Default to Linux xsel.
+ALT_KEY_NAME="Alt"
 CLIPBOARD_COMMAND="xsel --input"
 
-[ "${OSTYPE//[0-9.]/}" = "darwin" ] && CLIPBOARD_COMMAND="pbcopy"
+# Adjust if on Mac
+if [ "${OSTYPE//[0-9.]/}" = "darwin" ]; then
+	ALT_KEY_NAME="Opt"
+	CLIPBOARD_COMMAND="pbcopy"
+fi
+
+function decorate() {
+	# escape format: \e[{codes}m
+	# reset = 0
+	# bold = 1
+	# underline = 4
+	printf "\e[1;4m%s\e[0m" "${*}"
+}
+
+KEY_COMMANDS_HELP_TEXT="""
+\e[1mKey Bindings:
+
+----------------------------------------
+
+$(decorate "<Enter>")
+
+	Check out selected branch
+
+$(decorate "<${ALT_KEY_NAME}-Space>")
+
+	Toggle preview window (shows limited 'git log' of the selected branch)
+
+$(decorate "<${ALT_KEY_NAME}-Backspace>")
+
+	Delete branch (only available in HEADS view)
+
+$(decorate "<${ALT_KEY_NAME}-l>")
+
+	Invoke 'git log' on selected branch
+
+$(decorate "<${ALT_KEY_NAME}-y>")
+
+	Copy branch name to clipboard
+
+$(decorate "<${ALT_KEY_NAME}-[a h r t]>")
+
+	Show [ALL HEADS REMOTES TAGS]
+
+$(decorate "<Control-h>")
+
+	Show all key bindings
+"""
 
 GIT_BRANCH_DISPLAY_FORMAT=""
 
@@ -138,6 +180,8 @@ FZF_ARGS=(
 	--bind="alt-t:become($0 -t {q})"
 
 	--bind="load:change-prompt(${LOADED_PROMPT_TEXT})"
+
+	--bind="ctrl-h:execute(echo '${KEY_COMMANDS_HELP_TEXT}' | ${PAGER})"
 
 	--color="${GIT_FUZZY_CHECKOUT_FZF_COLORS}"
 
