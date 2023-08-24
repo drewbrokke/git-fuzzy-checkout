@@ -145,13 +145,35 @@ $(decorate "<Control-h>")
 	Show all key bindings
 """
 
-GIT_BRANCH_DISPLAY_FORMAT=""
+GIT_BRANCH_DISPLAY_ELEMENTS=(
+	"%(color:white)"
 
-# Shows a star if the ref is checked out
-GIT_BRANCH_DISPLAY_FORMAT+="%(if)%(HEAD)%(then)* %(else)  %(end)"
-GIT_BRANCH_DISPLAY_FORMAT+="%(committerdate:short)"
-GIT_BRANCH_DISPLAY_FORMAT+="${DELIMITER}%(color:yellow)%(refname:short)%(color:reset)"
-GIT_BRANCH_DISPLAY_FORMAT+="%(if)%(upstream)%(then)${DELIMITER}%(upstream:short)%(end)"
+	"%(if)%(HEAD)%(then)"
+	"%(color:dim)"
+	"* "
+	"%(else)"
+	"  "
+	"%(end)"
+
+	"%(committerdate:short)"
+
+	"${DELIMITER}"
+
+	"%(color:yellow)"
+	"%(refname:short)"
+
+	"%(if)%(upstream)%(then)"
+	"%(color:white)"
+
+	"${DELIMITER}"
+
+	"%(upstream:short)"
+	"%(end)"
+)
+
+# Print the array to a variable, but NOT space-separated
+# See https://stackoverflow.com/questions/13470413/converting-a-bash-array-into-a-delimited-string/49167382#49167382
+printf -v GIT_BRANCH_DISPLAY_FORMAT '%s' "${GIT_BRANCH_DISPLAY_ELEMENTS[@]}"
 
 # Expand the args to a string now so it will be usable by fzf in the reload command
 GIT_ARGS_STRING="${GIT_ARGS[*]} --format='${GIT_BRANCH_DISPLAY_FORMAT}'"
