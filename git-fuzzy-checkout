@@ -237,6 +237,7 @@ if [[ "${LABEL}" = "${LABEL_LOCAL_BRANCHES}" ]]; then
 	FZF_ARGS+=(--bind="alt-bspace:execute-silent(git branch -D {+2})+reload(git ${GIT_ARGS_STRING})")
 fi
 
+# git symbolic-ref HEAD &>/dev/null checks to see whether HEAD is on a branch, or detached
 if [ "${SHOW_CHECKED_OUT_BRANCH}" -ge 1 ] && git symbolic-ref HEAD &>/dev/null; then
 	FZF_ARGS+=(--header-lines=1)
 fi
