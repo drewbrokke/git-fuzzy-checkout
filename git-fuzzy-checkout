@@ -48,6 +48,7 @@ Examples
 
 ### Determine whether to search local, remotes, or all
 
+LABEL_ALL_REFS="all refs"
 LABEL_LOCAL_BRANCHES="local branches"
 
 GIT_ARGS=(for-each-ref refs/heads)
@@ -58,7 +59,7 @@ while getopts "ahrt" FLAGS; do
 	case $FLAGS in
 		a)
 			GIT_ARGS=(for-each-ref refs/heads refs/remotes refs/tags)
-			LABEL="all refs"
+			LABEL="${LABEL_ALL_REFS}"
 			SHOW_CHECKED_OUT_BRANCH=1
 			;;
 		h)
@@ -145,6 +146,15 @@ $(decorate "<Control-h>")
 	Show all key bindings
 """
 
+DISPLAY_ELEMENT_TYPE_FIELD=""
+if [[ "${LABEL}" = "${LABEL_ALL_REFS}" ]]; then
+	DISPLAY_ELEMENT_TYPE_FIELD+="%(align:9) ("
+	DISPLAY_ELEMENT_TYPE_FIELD+="%(if:equals=refs/heads)%(refname:rstrip=-2)%(then)branch%(end)"
+	DISPLAY_ELEMENT_TYPE_FIELD+="%(if:equals=refs/remotes)%(refname:rstrip=-2)%(then)remote%(end)"
+	DISPLAY_ELEMENT_TYPE_FIELD+="%(if:equals=refs/tags)%(refname:rstrip=-2)%(then)tag%(end)"
+	DISPLAY_ELEMENT_TYPE_FIELD+=")%(end)"
+fi
+
 GIT_BRANCH_DISPLAY_ELEMENTS=(
 	"%(color:white)"
 
@@ -155,7 +165,9 @@ GIT_BRANCH_DISPLAY_ELEMENTS=(
 	"  "
 	"%(end)"
 
-	"%(committerdate:short)"
+	"%(align:10)%(committerdate:short)%(end)"
+
+	"${DISPLAY_ELEMENT_TYPE_FIELD}"
 
 	"${DELIMITER}"
 
