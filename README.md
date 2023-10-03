@@ -1,5 +1,22 @@
 # git-fuzzy-checkout
 
+## How to Install
+
+```sh
+git clone git@github.com:drewbrokke/git-fuzzy-checkout.git
+cd git-fuzzy-checkout
+make install
+```
+
+## How to Uninstall
+
+In the same repo directory, run:
+
+```sh
+make uninstall
+```
+
+## Usage
 ```
 git fuzzy-checkout
 
